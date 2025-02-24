@@ -1,1 +1,7 @@
-/data/*
+*/data/perturbData/*
+*.DS_Store
+*/.ipynb_checkpoints/*
+*.vscode/*
+*/.pytest_cache/*
+/.idea
+data/*
