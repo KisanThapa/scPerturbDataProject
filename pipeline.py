@@ -7,6 +7,9 @@ from scipy.special import erf
 from joblib import Parallel, delayed
 from statsmodels.stats.multitest import multipletests
 
+sc.settings.n_jobs = -1  # Use all available cores
+sc.settings.verbosity = 1  # Optional: control logging level
+
 UPLOAD_DIR = "data/"
 
 
@@ -120,19 +123,16 @@ def bh_frd_correction(p_value_file: str, alpha=0.05) -> pd.DataFrame:
 
 
 perturb_data_dir = "data/perturbData/"
-unique_perturbations = []
-datasets = []
 count = 0
 
 prior_data = pd.read_csv("data/prior_data.csv", sep=",")
 
 for file in os.listdir(perturb_data_dir):
 
-    if count >= 2:
-        break
-    count += 1
-
     if file.endswith(".h5ad"):
+        count += 1
+        print(f"Processing file number {count}: {file}")
+
         adata = sc.read_h5ad(perturb_data_dir + file)
 
         gene_exp = pd.DataFrame(
@@ -202,7 +202,7 @@ for file in os.listdir(perturb_data_dir):
         distr = get_sd(
             max_target=np.max(prior_data["updown"]),
             total_genes=len(gene_exp),
-            iters=1000,
+            iters=10000,
         )
 
         print("Running analysis in multiple cores...")
