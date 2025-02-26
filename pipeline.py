@@ -180,6 +180,7 @@ for file in os.listdir(perturb_data_dir):
         umap_df = adata.obsm.to_df()
         umap_df.index = adata.obs_names
         umap_df["Cluster"] = "NNN"
+        umap_df.to_csv(f"data/{file}_umap.tsv", sep="\t")
 
         # ---------------------------------------------------------------------
 
@@ -215,13 +216,13 @@ for file in os.listdir(perturb_data_dir):
         p_values.dropna(axis=1, how="all", inplace=True)
 
         # Save p-values to file
-        p_file = f"data/{file}_p_values.csv"
+        p_file = f"data/{file}_p_values.tsv"
         p_values.to_csv(p_file, sep="\t")
 
         # ii. Perform Benjamini-Hochberg correction
         print("Performing Benjamini-Hochberg correction...")
         bh_df = bh_frd_correction(p_file)
-        bh_file = f"data/{file}_bh_correction.csv"
+        bh_file = f"data/{file}_bh_correction.tsv"
         bh_df.to_csv(bh_file, sep="\t")
 
 print("Concluded...")
