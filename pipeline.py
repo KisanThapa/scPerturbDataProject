@@ -3,7 +3,6 @@ import pandas as pd
 import scanpy as sc
 import os
 from scipy.sparse import issparse
-from scipy.stats import zscore
 from scipy.special import erf
 from joblib import Parallel, delayed
 from statsmodels.stats.multitest import multipletests
@@ -135,14 +134,13 @@ for file in os.listdir(perturb_data_dir):
 
     if file.endswith(".h5ad"):
         adata = sc.read_h5ad(perturb_data_dir + file)
-        meta_data = pd.DataFrame(adata.obs)
 
         gene_exp = pd.DataFrame(
             adata.X.toarray() if issparse(adata.X) else adata.X,
             index=adata.obs.index,
             columns=adata.var.index
         ).T
-        meta_data = adata.obs
+        meta_data = pd.DataFrame(adata.obs)
 
         # STEP 1: RUN UMAP PIPELINE
         # i. Filter cells and genes
@@ -188,8 +186,12 @@ for file in os.listdir(perturb_data_dir):
         # STEP 2: TF Analysis
         # i. Perform TF analysis
         print("Performing TF analysis...")
-        gene_exp = gene_exp.replace(0.0, np.nan).dropna(thresh=int(len(gene_exp.columns) * 0.05))
-        gene_exp = gene_exp.apply(zscore, axis=1, nan_policy="omit")
+        min_non_na_values = int(len(gene_exp.columns) * 0.05)
+        gene_exp = gene_exp.mask(gene_exp == 0).dropna(thresh=min_non_na_values)
+        gene_exp = (
+                (gene_exp - gene_exp.mean(axis=1, skipna=True).values.reshape(-1, 1)) /
+                gene_exp.std(axis=1, skipna=True).values.reshape(-1, 1)
+        )
 
         # Grouping prior_network network
         prior_data = prior_data.groupby("tf").agg({"action": list, "target": list})

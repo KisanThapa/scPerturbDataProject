@@ -5,3 +5,4 @@
 */.pytest_cache/*
 /.idea
 data/*
+__pycache__
