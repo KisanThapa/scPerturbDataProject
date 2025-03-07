@@ -4,5 +4,6 @@
 *.vscode/*
 */.pytest_cache/*
 /.idea
+/.fleet
 data/*
 __pycache__

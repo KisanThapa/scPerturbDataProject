@@ -6,7 +6,7 @@ from scipy.sparse import issparse
 from scipy.special import erf
 from joblib import Parallel, delayed
 from statsmodels.stats.multitest import multipletests
-import gc  # Import garbage collection module
+import gc
 
 sc.settings.n_jobs = -1  # Use all available cores
 sc.settings.verbosity = 1  # Optional: control logging level
@@ -26,7 +26,7 @@ def distribution_worker(max_target: int, ranks: np.array) -> np.ndarray:
 
 def get_sd(max_target: int, total_genes: int, iters: int) -> np.ndarray:
     """Load or generate standard deviation distribution."""
-    sd_file = f"SD_anal_{max_target}_{total_genes}_{iters}.npz"
+    sd_file = f"SD_ana_{max_target}_{total_genes}_{iters}.npz"
     sd_file = os.path.join(UPLOAD_DIR, sd_file)
 
     if os.path.isfile(sd_file):
