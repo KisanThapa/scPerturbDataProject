@@ -90,8 +90,7 @@ def sample_worker(
     valid_indices = ~np.isnan(prior_network["rs"])
 
     z_vals = (np.abs(prior_network.loc[valid_indices, "rs"]) - 0.5) / distribution[
-        prior_network.loc[valid_indices, "valid_target"].astype(int) - 1
-        ]
+        prior_network.loc[valid_indices, "valid_target"].astype(int) - 1]
     p_vals = 1 + erf(z_vals / np.sqrt(2))
 
     # Adjust sign based on 'rs' values
