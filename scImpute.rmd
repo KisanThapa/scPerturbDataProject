@@ -25,8 +25,8 @@ for (file_path in file_list) {
     outfile = "csv",
     out_dir = file.path(output_dir, file_name),  # Output to a unique subfolder
     drop_thre = 0.5,
-    Kcluster = 10,       # Adjust if you know your number of cell types
-    ncores = 4
+    Kcluster = 10,
+    ncores = 10
   )
 
   message(paste("Completed:", file_name))
